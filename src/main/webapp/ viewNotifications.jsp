@@ -4,7 +4,7 @@
 
 <html>
 <body>
-    <h2>Notifications</h2>
+    <h2>View Notifications</h2>
     <table border="1">
         <tr>
             <th>User ID</th>
