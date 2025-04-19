@@ -1,5 +1,7 @@
 package com.res.DTO;
 
+import java.sql.Date;
+
 public class Users {
     private int id;
     private String name;
@@ -7,6 +9,19 @@ public class Users {
     private String mail;
     private String password;
     private String date;
+
+ // Default constructor (empty constructor)
+    public Users() {
+    }
+
+    // Constructor to initialize all fields
+    public Users(int id, String mail, String name, String phone, Date date) {
+        this.id = id;
+        this.mail = mail;
+        this.name = name;
+        this.phone = Long.parseLong(phone);  // Assuming phone is a String in the database
+        this.date = date.toString();  // Convert Date to String if needed
+    }
 
     // Getters and Setters
     public int getId() {

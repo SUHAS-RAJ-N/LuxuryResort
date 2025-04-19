@@ -12,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 
 public class EmailSender {
     private static final String SENDER_EMAIL = "suhasrajn113@gmail.com"; // Change to your email
-    private static final String SENDER_PASSWORD = "cxdf gdmi duzc yydu"; // Use an App Password for Gmail
+    private static final String SENDER_PASSWORD = "hlzi nwdt tknl urog"; // Use an App Password for Gmail
     private static final String REPLY_TO_EMAIL = "suhasrajn113@gmail.com"; // Optional Reply-To address
 
     public static void sendEmail(String recipient, String subject, String body, boolean isHtml) {

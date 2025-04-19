@@ -4,7 +4,6 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 
 <%
-    // Get the list of users from the request attribute (should be set by a servlet)
     ArrayList<Users> users = (ArrayList<Users>) request.getAttribute("users");
 %>
 

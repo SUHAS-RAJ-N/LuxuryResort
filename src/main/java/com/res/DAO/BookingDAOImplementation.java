@@ -179,11 +179,20 @@ public class BookingDAOImplementation implements BookingDAO {
     // Cancel a booking by ID and user email
     @Override
     public boolean cancelBooking(int bookingId, String mail) {
-        String sql = "DELETE FROM booking WHERE id = ? AND mail = ?";
-        
+        String sql;
+
+        if (mail != null && !mail.isEmpty()) {
+            sql = "DELETE FROM booking WHERE id = ? AND mail = ?";
+        } else {
+            sql = "DELETE FROM booking WHERE id = ?"; // Admin deletion
+        }
+
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, bookingId);
-            stmt.setString(2, mail);
+
+            if (mail != null && !mail.isEmpty()) {
+                stmt.setString(2, mail);
+            }
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -192,4 +201,5 @@ public class BookingDAOImplementation implements BookingDAO {
         }
         return false;
     }
+
 }

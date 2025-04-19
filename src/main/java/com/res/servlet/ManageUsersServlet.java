@@ -4,7 +4,7 @@ import com.res.DAO.UsersDAO;
 import com.res.DAO.UsersDAOImplementation;
 import com.res.DTO.Users;
 
-import jakarta.servlet.RequestDispatcher;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,20 +13,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 @WebServlet("/manageUsers")
 public class ManageUsersServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Fetch users from the database
-        UsersDAO usersDAO = new UsersDAOImplementation();
+        UsersDAO usersDAO = new UsersDAOImplementation();  
         ArrayList<Users> usersList = usersDAO.getAllUsers();
+        
+        System.out.println("Users List: " + usersList);  // Log the list to ensure data is being fetched
 
-        // Set the users list as a request attribute
         request.setAttribute("users", usersList);
-
-        // Forward the request to the JSP page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("manageUsers.jsp");
-        dispatcher.forward(request, response);
+        request.getRequestDispatcher("manageUsers.jsp").forward(request, response);
     }
 }
