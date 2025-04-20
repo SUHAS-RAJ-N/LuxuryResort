@@ -1,131 +1,114 @@
 package com.res.DAO;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import com.res.Connection.Connector;
 import com.res.DTO.Rooms;
+import java.sql.*;
+import java.util.*;
 
 public class RoomsDAOImplementation implements RoomsDAO {
-    private Connection conn;
+	 private Connection con;
 
-    public RoomsDAOImplementation() {
-        this.conn = Connector.requestConnection();
-    }
+	    public RoomsDAOImplementation() {
+	        this.con = Connector.requestConnection();  // Connection through a utility class
+	    }
+	    @Override
+	    public boolean addRoom(Rooms room) {
+	        String sql = "INSERT INTO rooms (name, type, price, description, imageUrl, available) VALUES (?, ?, ?, ?, ?, ?)";
+	        try (
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    @Override
-    public boolean addRoom(Rooms room) {
-        String sql = "INSERT INTO rooms (name, type, price, description, imageUrl, isAvailable) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, room.getName());
-            stmt.setString(2, room.getType());
-            stmt.setDouble(3, room.getPrice());
-            stmt.setString(4, room.getDescription());
-            stmt.setString(5, room.getImageUrl());
-            stmt.setBoolean(6, room.isAvailable());
+	            ps.setString(1, room.getName());
+	            ps.setString(2, room.getType());
+	            ps.setDouble(3, room.getPrice());
+	            ps.setString(4, room.getDescription());
+	            ps.setString(5, room.getImageUrl());
+	            ps.setBoolean(6, room.isAvailable());
+	            return ps.executeUpdate() > 0;
 
-            return stmt.executeUpdate() > 0; // Returns true if insert is successful
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return false;
+	    }
 
-    @Override
-    public List<Rooms> getAllRooms() {
-        List<Rooms> rooms = new ArrayList<>();
-        String sql = "SELECT * FROM rooms";
+	    @Override
+	    public boolean updateRoom(Rooms room) {
+	        String sql = "UPDATE rooms SET name=?, type=?, price=?, description=?, imageUrl=?, available=? WHERE id=?";
+	        try (
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+	            ps.setString(1, room.getName());
+	            ps.setString(2, room.getType());
+	            ps.setDouble(3, room.getPrice());
+	            ps.setString(4, room.getDescription());
+	            ps.setString(5, room.getImageUrl());
+	            ps.setBoolean(6, room.isAvailable());
+	            ps.setInt(7, room.getId());
+	            return ps.executeUpdate() > 0;
 
-            while (rs.next()) {
-                Rooms room = new Rooms(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("type"),
-                    rs.getDouble("price"),
-                    rs.getString("description"),
-                    rs.getString("imageUrl"),
-                    rs.getBoolean("isAvailable")
-                );
-                rooms.add(room);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rooms;
-    }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return false;
+	    }
 
-    @Override
-    public Rooms getRoomById(int id) {
-        String sql = "SELECT * FROM rooms WHERE id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+	    @Override
+	    public boolean deleteRoom(int id) {
+	        String sql = "DELETE FROM rooms WHERE id=?";
+	        try (
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                return new Rooms(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("type"),
-                    rs.getDouble("price"),
-                    rs.getString("description"),
-                    rs.getString("imageUrl"),
-                    rs.getBoolean("isAvailable")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	            ps.setInt(1, id);
+	            return ps.executeUpdate() > 0;
 
-    @Override
-    public boolean updateRoom(Rooms room) {
-        String sql = "UPDATE rooms SET name=?, type=?, price=?, description=?, imageUrl=?, isAvailable=? WHERE id=?";
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return false;
+	    }
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, room.getName());
-            stmt.setString(2, room.getType());
-            stmt.setDouble(3, room.getPrice());
-            stmt.setString(4, room.getDescription());
-            stmt.setString(5, room.getImageUrl());
-            stmt.setBoolean(6, room.isAvailable());
-            stmt.setInt(7, room.getId());
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	    @Override
+	    public Rooms getRoomById(int id) {
+	        String sql = "SELECT * FROM rooms WHERE id=?";
+	        try (
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    @Override
-    public boolean deleteRoom(int id) {
-        String sql = "DELETE FROM rooms WHERE id=?";
+	            ps.setInt(1, id);
+	            ResultSet rs = ps.executeQuery();
+	            if (rs.next()) {
+	                return new Rooms(
+	                    rs.getInt("id"), rs.getString("name"), rs.getString("type"),
+	                    rs.getDouble("price"), rs.getString("description"),
+	                    rs.getString("imageUrl"), rs.getBoolean("available")
+	                );
+	            }
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return null;
+	    }
 
-    @Override
-    public boolean updateRoomStatus(int id, boolean isAvailable) {
-        String sql = "UPDATE rooms SET isAvailable=? WHERE id=?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setBoolean(1, isAvailable);
-            stmt.setInt(2, id);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	    @Override
+	    public List<Rooms> getAllRooms() {
+	        List<Rooms> list = new ArrayList<>();
+	        String sql = "SELECT * FROM rooms";
+	        try (
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-	
-}
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	                Rooms room = new Rooms(
+	                    rs.getInt("id"), rs.getString("name"), rs.getString("type"),
+	                    rs.getDouble("price"), rs.getString("description"),
+	                    rs.getString("imageUrl"), rs.getBoolean("available")
+	                );
+	                list.add(room);
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return list;
+	    }
+	}

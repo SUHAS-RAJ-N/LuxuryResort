@@ -1,22 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.res.DTO.Notification" %>
-
+<%@ page import="java.util.List, com.res.DTO.Notification" %>
 <html>
+<head>
+    <title>View Notifications</title>
+</head>
 <body>
-    <h2>View Notifications</h2>
+    <h2>User Notifications</h2>
     <table border="1">
         <tr>
+            <th>Notification ID</th>
             <th>User ID</th>
             <th>Message</th>
             <th>Status</th>
-            <th>Date</th>
+            <th>Notification Date</th>
         </tr>
-        <% 
-            ArrayList<Notification> notificationList = (ArrayList<Notification>) request.getAttribute("notificationList");
-            for (Notification notification : notificationList) {
+        <%
+            List<Notification> notifications = (List<Notification>) request.getAttribute("notifications");
+            for (Notification notification : notifications) {
         %>
         <tr>
+            <td><%= notification.getNotificationId() %></td>
             <td><%= notification.getUserId() %></td>
             <td><%= notification.getMessage() %></td>
             <td><%= notification.getStatus() %></td>

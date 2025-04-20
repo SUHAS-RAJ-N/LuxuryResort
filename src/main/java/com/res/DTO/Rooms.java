@@ -7,19 +7,21 @@ public class Rooms {
     private double price;
     private String description;
     private String imageUrl;
-    private boolean isAvailable;
+    private boolean available;
 
-    public Rooms(int id, String name, String type, double price, String description, String imageUrl, boolean isAvailable) {
+    public Rooms() {}
+
+    public Rooms(int id, String name, String type, double price, String description, String imageUrl, boolean available) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.isAvailable = isAvailable;
+        this.available = available;
     }
 
-    // Getters and Setters
+    // Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -38,6 +40,6 @@ public class Rooms {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public boolean isAvailable() { return isAvailable; }
-    public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
+    public boolean isAvailable() { return available; }
+    public void setAvailable(boolean available) { this.available = available; }
 }

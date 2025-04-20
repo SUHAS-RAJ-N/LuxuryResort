@@ -76,6 +76,7 @@ public class BookingServlet extends HttpServlet {
                         + "<p><b>Check-in Date:</b> " + checkIn + "</p>"
                         + "<p><b>Check-out Date:</b> " + checkOut + "</p>"
                         + "<p><b>Price:</b> Rs." + price + "</p>"
+                        + "<img src='cid:roomImage' alt='" + roomType + "' style='width:100%;max-width:600px;border-radius:10px;margin-top:10px;'/>"
                         + "<p>Thank you for choosing our resort!</p>"
                         + "<p>Best Regards,</p>"
                         + "<p><b>Resort Team</b></p>"
@@ -89,7 +90,8 @@ public class BookingServlet extends HttpServlet {
                 }
 
                 // Redirect to success page instead of forwarding
-                response.sendRedirect("BookingSuccess.jsp?bookingId=" + bookingId);
+                response.sendRedirect("BookingSuccess.jsp?bookingId=" + bookingId + "&roomType=" + roomType);
+
             } else {
                 request.setAttribute("error", "Booking failed. Please try again.");
                 request.getRequestDispatcher("Booking.jsp").forward(request, response);

@@ -10,53 +10,31 @@ public class Feedback {
     private String comment;
     private Timestamp feedbackDate;
 
-    // Getters and Setters
-
-    public int getFeedbackId() {
-        return feedbackId;
-    }
-
-    public void setFeedbackId(int feedbackId) {
+    public Feedback(int feedbackId, int userId, int roomId, int rating, String comment, Timestamp feedbackDate) {
         this.feedbackId = feedbackId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public int getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(int roomId) {
         this.roomId = roomId;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
         this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Timestamp getFeedbackDate() {
-        return feedbackDate;
-    }
-
-    public void setFeedbackDate(Timestamp feedbackDate) {
         this.feedbackDate = feedbackDate;
     }
+
+    // Getters and Setters
+    public int getFeedbackId() { return feedbackId; }
+    public void setFeedbackId(int feedbackId) { this.feedbackId = feedbackId; }
+
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
+
+    public int getRoomId() { return roomId; }
+    public void setRoomId(int roomId) { this.roomId = roomId; }
+
+    public int getRating() { return rating; }
+    public void setRating(int rating) { this.rating = rating; }
+
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
+
+    public Timestamp getFeedbackDate() { return feedbackDate; }
+    public void setFeedbackDate(Timestamp feedbackDate) { this.feedbackDate = feedbackDate; }
 }

@@ -1,3 +1,4 @@
+<%@ page import="com.res.DAO.RoomsDAOImplementation, com.res.DTO.Rooms" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
@@ -5,19 +6,26 @@
 </head>
 <body>
     <h2>Edit Room</h2>
-    <form action="UpdateRoomServlet" method="post">
+    
+    <form action="EditRoomServlet" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<%= request.getAttribute("roomId") %>">
-        Name: <input type="text" name="name" value="<%= request.getAttribute("name") %>"><br>
-        Type: <input type="text" name="type" value="<%= request.getAttribute("type") %>"><br>
-        Price: <input type="text" name="price" value="<%= request.getAttribute("price") %>"><br>
-        Description: <input type="text" name="description" value="<%= request.getAttribute("description") %>"><br>
-        Image URL: <input type="text" name="imageUrl" value="<%= request.getAttribute("imageUrl") %>"><br>
-        Availability:
-        <select name="availability">
-            <option value="available" <%= "available".equals(request.getAttribute("availability")) ? "selected" : "" %>>Available</option>
-            <option value="not available" <%= "not available".equals(request.getAttribute("availability")) ? "selected" : "" %>>Not Available</option>
-        </select><br>
-        <button type="submit">Update Room</button>
+        
+        <label for="name">Room Name:</label>
+        <input type="text" id="name" name="name" value="<%= request.getAttribute("roomName") %>" required><br><br>
+
+        <label for="type">Room Type:</label>
+        <input type="text" id="type" name="type" value="<%= request.getAttribute("roomType") %>" required><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value="<%= request.getAttribute("roomPrice") %>" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required><%= request.getAttribute("roomDescription") %></textarea><br><br>
+
+        <label for="image">Room Image:</label>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+
+        <button type="submit">Save Changes</button>
     </form>
 </body>
 </html>

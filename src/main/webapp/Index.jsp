@@ -340,10 +340,10 @@ a {
 	</section>
 	<footer id="contact" class="footer">
 		<p>Sy No.216 & 344 Channagondanahalli, Chikmagalur - 577101</p>
-		<p>T: +91 8050677478 | E: reservations@paradisechikmagalur.com</p>
+		<p>T: +91 8748020325 | E: suhasrajn113@gmail.com</p>
 		<div class="social-icons">
 			<a href="#"><i class="fab fa-whatsapp"></i></a> <a href="#"><i
-				class="fab fa-instagram"></i></a> <a href="#"><i
+				class="fab fa-instagram"></i></a> <a href="https://www.instagram.com/suhasrajn/"><i
 				class="fab fa-facebook"></i></a> <a href="#"><i
 				class="fab fa-twitter"></i></a>
 		</div>

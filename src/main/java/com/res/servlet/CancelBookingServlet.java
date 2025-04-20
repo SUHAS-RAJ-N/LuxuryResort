@@ -1,8 +1,10 @@
 package com.res.servlet;
 
+import com.Resort.utils.CancelEmail;
 import com.res.DAO.BookingDAO;
 import com.res.DAO.BookingDAOImplementation;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -29,7 +31,17 @@ public class CancelBookingServlet extends HttpServlet {
             boolean success = bookingDAO.cancelBooking(bookingId, mail);
 
             if (success) {
-                session.setAttribute("cancelMsg", "Booking cancelled successfully!");
+                // Send cancellation email
+                try {
+                    CancelEmail.sendCancellationEmail(mail, String.valueOf(bookingId));
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    session.setAttribute("cancelMsg", "Booking cancelled, but failed to send email notification.");
+                    response.sendRedirect("CancelBooking.jsp");
+                    return;
+                }
+
+                session.setAttribute("cancelMsg", "Booking cancelled successfully and cancellation email sent.");
             } else {
                 session.setAttribute("cancelMsg", "Cancellation failed. Please try again.");
             }

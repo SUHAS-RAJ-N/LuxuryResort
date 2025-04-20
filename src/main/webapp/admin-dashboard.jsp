@@ -70,7 +70,7 @@
             <a href="manageBookings.jsp"><i class="fas fa-calendar-check"></i> Manage Bookings</a>
             <a href="manageUsers.jsp"><i class="fas fa-users"></i> Manage Users</a>
             <a href="viewReports.jsp"><i class="fas fa-chart-line"></i> View Reports</a>
-            <a href="notifications.jsp"><i class="fas fa-bell"></i> Notifications</a>
+            <a href="viewNotifications.jsp"><i class="fas fa-bell"></i> Notifications</a>
             <a href="feedback.jsp"><i class="fas fa-comment-alt"></i> Customer Feedback</a>
             <a href="Logout" onclick="return confirmLogout();"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
