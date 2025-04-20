@@ -47,7 +47,7 @@ public class SignUp extends HttpServlet {
             
             // Validate phone number
             try {
-                user.setPhone(Long.parseLong(phoneStr));
+                user.setPhone(phoneStr);
             } catch (NumberFormatException e) {
                 req.setAttribute("error", "Invalid phone number!");
                 forwardToSignupPage(req, resp);

@@ -19,44 +19,45 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Retrieve user input
+        // Retrieve email and password from the login form
         String email = req.getParameter("mail");
         String password = req.getParameter("password");
 
-        // Validate input fields
+        // Input validation
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             req.setAttribute("error", "Email and Password are required.");
             RequestDispatcher rd = req.getRequestDispatcher("Login.jsp");
             rd.forward(req, resp);
-            return; // Stop execution
+            return;
         }
 
-        // Check credentials
+        // Validate the user's credentials
         UsersDAO cdao = new UsersDAOImplementation();
         Users customer = cdao.getCustomer(email, password);
 
-        if (customer != null) { 
-            // Invalidate previous session and create a new one to prevent session fixation
+        if (customer != null) {
+            // Invalidate old session if it exists
             HttpSession oldSession = req.getSession(false);
             if (oldSession != null) {
                 oldSession.invalidate();
             }
 
+            // Create a new session
             HttpSession session = req.getSession(true);
             session.setAttribute("userId", customer.getId());
             session.setAttribute("mail", email);
             session.setAttribute("customer", customer);
+            session.setAttribute("role", customer.getRole());
 
-            // Check if the user is an admin (ID = 1 means admin)
-            if (customer.getId() == 1) {
-                session.setAttribute("role", "admin");
+            // Check the role and redirect accordingly
+            if ("admin".equalsIgnoreCase(customer.getRole())) {
                 session.setAttribute("adminEmail", email);
-                resp.sendRedirect("admin-dashboard.jsp"); // Redirect to admin panel
+                resp.sendRedirect("admin-dashboard.jsp");
             } else {
-                session.setAttribute("role", "user");
-                resp.sendRedirect("userDashboard.jsp"); // Redirect to user dashboard
+                resp.sendRedirect("userDashboard.jsp");
             }
         } else {
+            // Invalid credentials
             req.setAttribute("error", "Invalid Credentials");
             RequestDispatcher rd = req.getRequestDispatcher("Login.jsp");
             rd.forward(req, resp);

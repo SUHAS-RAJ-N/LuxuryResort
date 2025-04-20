@@ -14,17 +14,18 @@ public class UsersDAOImplementation implements UsersDAO {
 	private Connection con;
 
 	public UsersDAOImplementation() {
-		this.con = Connector.requestConnection(); // Assuming Connector manages your DB connections
+		this.con = Connector.requestConnection();
 	}
 
 	@Override
 	public boolean insertCustomer(Users user) {
-		String query = "INSERT INTO USERS (name, phone, mail, password, registration_date) VALUES (?, ?, ?, ?, NOW())";
+		String query = "INSERT INTO USERS (name, phone, mail, password, registration_date, role) VALUES (?, ?, ?, ?, NOW(), ?)";
 		try (PreparedStatement ps = con.prepareStatement(query)) {
 			ps.setString(1, user.getName());
-			ps.setLong(2, user.getPhone());
+			ps.setString(2, user.getPhone());
 			ps.setString(3, user.getMail());
 			ps.setString(4, user.getPassword());
+			ps.setString(5, user.getRole() != null ? user.getRole() : "user");
 
 			int rowsAffected = ps.executeUpdate();
 			return rowsAffected > 0;
@@ -36,13 +37,14 @@ public class UsersDAOImplementation implements UsersDAO {
 
 	@Override
 	public boolean updateCustomer(Users user) {
-		String query = "UPDATE USERS SET name=?, phone=?, mail=?, password=? WHERE id=?";
+		String query = "UPDATE USERS SET name=?, phone=?, mail=?, password=?, role=? WHERE id=?";
 		try (PreparedStatement ps = con.prepareStatement(query)) {
 			ps.setString(1, user.getName());
-			ps.setLong(2, user.getPhone());
+			ps.setString(2, user.getPhone());
 			ps.setString(3, user.getMail());
 			ps.setString(4, user.getPassword());
-			ps.setInt(5, user.getId());
+			ps.setString(5, user.getRole());
+			ps.setInt(6, user.getId());
 
 			int rowsAffected = ps.executeUpdate();
 			return rowsAffected > 0;
@@ -69,7 +71,7 @@ public class UsersDAOImplementation implements UsersDAO {
 	@Override
 	public Users getCustomer(String mail, String password) {
 		Users user = null;
-		String query = "SELECT * FROM USERS WHERE MAIL=? AND PASSWORD=?";
+		String query = "SELECT * FROM USERS WHERE mail=? AND password=?";
 		try (PreparedStatement ps = con.prepareStatement(query)) {
 			ps.setString(1, mail);
 			ps.setString(2, password);
@@ -77,12 +79,13 @@ public class UsersDAOImplementation implements UsersDAO {
 
 			if (rs.next()) {
 				user = new Users();
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setPhone(rs.getLong("PHONE"));
-				user.setMail(rs.getString("MAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
-				user.setDate(rs.getString("registration_date"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setPhone(rs.getString("phone"));
+				user.setMail(rs.getString("mail"));
+				user.setPassword(rs.getString("password"));
+				user.setDate(rs.getDate("registration_date"));
+				user.setRole(rs.getString("role"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -99,66 +102,86 @@ public class UsersDAOImplementation implements UsersDAO {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				user = new Users();
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setPhone(rs.getLong("PHONE"));
-				user.setMail(rs.getString("MAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
-				user.setDate(rs.getString("registration_date"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setPhone(rs.getString("phone"));
+				user.setMail(rs.getString("mail"));
+				user.setPassword(rs.getString("password"));
+				user.setDate(rs.getDate("registration_date"));
+				user.setRole(rs.getString("role"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return user;
 	}
+
+	@Override
+	public Users getUserById(int userId) {
+	    String query = "SELECT * FROM users WHERE id = ?";
+	    try (PreparedStatement stmt = con.prepareStatement(query)) {
+	        stmt.setInt(1, userId);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            Users user = new Users();
+	            user.setId(rs.getInt("id"));
+	            user.setName(rs.getString("name"));
+	            user.setPhone(rs.getString("phone"));
+	            user.setMail(rs.getString("mail"));
+	            user.setRole(rs.getString("role"));
+	            user.setDate(rs.getDate("registration_date"));
+	            return user;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
+
 	@Override
 	public ArrayList<Users> getAllUsers() {
-	    ArrayList<Users> usersList = new ArrayList<>();
-	    String sql = "SELECT * FROM users";
-
-	    try (Connection con = Connector.requestConnection();
-	         Statement stmt = con.createStatement();
-	         ResultSet rs = stmt.executeQuery(sql)) {
+	    ArrayList<Users> userList = new ArrayList<>();
+	    
+	    String query = "SELECT u.*, " +
+	                   "(SELECT COUNT(*) FROM booking b WHERE b.users_id = u.id) AS totalBookings " +
+	                   "FROM users u";
+	    
+	    try (PreparedStatement stmt = con.prepareStatement(query);
+	         ResultSet rs = stmt.executeQuery()) {
 
 	        while (rs.next()) {
 	            Users user = new Users();
 	            user.setId(rs.getInt("id"));
-	            user.setName(rs.getString("name"));
-	            user.setPhone(rs.getLong("phone"));
 	            user.setMail(rs.getString("mail"));
-	            user.setPassword(rs.getString("password"));
-	            user.setDate(rs.getString("registration_date"));
-	            usersList.add(user);
+	            user.setName(rs.getString("name"));
+	            user.setPhone(rs.getString("phone"));
+	            user.setDate(rs.getDate("registration_date"));
+	            user.setRole(rs.getString("role"));
+	            user.setTotalBookings(rs.getInt("totalBookings")); // 🔥 Add this line
+	            userList.add(user);
 	        }
 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-
-	    return usersList;
+	    
+	    return userList;
 	}
 
 
-
+    
 	@Override
-	public Users getUserById(int id) {
-		Users user = null;
-		String query = "SELECT * FROM USERS WHERE id = ?";
-		try (PreparedStatement ps = con.prepareStatement(query)) {
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				user = new Users();
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setPhone(rs.getLong("PHONE"));
-				user.setMail(rs.getString("MAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
-				user.setDate(rs.getString("registration_date"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return user;
-	}
+	public boolean deleteUser(int userId) {
+        String query = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

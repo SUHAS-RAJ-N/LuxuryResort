@@ -2,15 +2,15 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 
 <%
-    // Validate Admin Session
+    // Validate Admin Session by role
     HttpSession session1 = request.getSession(false);
-    if (session1 == null || session1.getAttribute("userId") == null) {
+    if (session1 == null || session1.getAttribute("role") == null) {
         response.sendRedirect("Login.jsp");
         return;
     }
 
-    Integer userId = (Integer) session1.getAttribute("userId");
-    if (userId == null || userId != 1) {
+    String role = (String) session1.getAttribute("role");
+    if (role == null || !role.equals("admin")) {
         response.sendRedirect("Index.jsp");
         return;
     }

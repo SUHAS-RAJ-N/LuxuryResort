@@ -12,4 +12,5 @@ public interface UsersDAO {
     Users getCustomer(String mail);
     ArrayList<Users> getAllUsers();
     Users getUserById(int id);
+	boolean deleteUser(int userId);
 }

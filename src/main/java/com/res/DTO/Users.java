@@ -5,22 +5,26 @@ import java.sql.Date;
 public class Users {
     private int id;
     private String name;
-    private long phone;
+    private String phone;  // Changed to String to store phone numbers correctly
     private String mail;
     private String password;
-    private String date;
+    private Date date; // Changed to java.sql.Date for proper date handling
+    private String role;
+    private int totalBookings;
 
- // Default constructor (empty constructor)
-    public Users() {
-    }
+    // Default constructor
+    public Users() {}
 
-    // Constructor to initialize all fields
-    public Users(int id, String mail, String name, String phone, Date date) {
+    // Constructor to initialize all fields (except password and role)
+    public Users(int id, String mail, String name, String phone, Date date,String role,int totalBookings) {
         this.id = id;
         this.mail = mail;
         this.name = name;
-        this.phone = Long.parseLong(phone);  // Assuming phone is a String in the database
-        this.date = date.toString();  // Convert Date to String if needed
+        this.phone = phone;  // Directly assigning the phone as String
+        this.date = date;    // Directly assigning the date as java.sql.Date
+        this.role=role;
+        this.totalBookings=totalBookings;
+        
     }
 
     // Getters and Setters
@@ -40,11 +44,11 @@ public class Users {
         this.name = name;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -64,16 +68,35 @@ public class Users {
         this.password = password;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(Date registrationDate) {
+        this.date = registrationDate;
     }
 
-    @Override
-    public String toString() {
-        return "Customer [id=" + id + ", name=" + name + ", phone=" + phone + ", mail=" + mail + ", date=" + date + "]";
+    // Getter and Setter for role
+    public String getRole() {
+        return role;
     }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+    public int getTotalBookings() {
+        return totalBookings;
+    }
+
+    public void setTotalBookings(int totalBookings) {
+        this.totalBookings = totalBookings;
+    }
+
+	@Override
+	public String toString() {
+		return "Users [id=" + id + ", name=" + name + ", phone=" + phone + ", mail=" + mail + ", password=" + password
+				+ ", date=" + date + ", role=" + role + ", totalBookings=" + totalBookings + "]";
+	}
+
+    
 }

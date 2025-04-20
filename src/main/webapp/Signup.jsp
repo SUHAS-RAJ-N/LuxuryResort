@@ -26,7 +26,7 @@
             height: 100%;
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
+            background: linear-gradient(135deg, #f6f9ff, #e4ecfa);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,23 +34,36 @@
 
         .card {
             width: 100%;
-            max-width: 400px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 35px;
-            transition: transform 0.3s;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            animation: fadeIn 0.7s ease-in-out;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
         }
 
         .card h2 {
             text-align: center;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 25px;
+            color: #2c3e50;
+            margin-bottom: 30px;
         }
 
         .form-label {
@@ -59,19 +72,18 @@
         }
 
         .form-control {
-            border-radius: 25px;
-            padding-left: 40px;
-            font-size: 16px;
+            border-radius: 30px;
+            padding-left: 45px;
+            font-size: 15px;
             height: 45px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            transition: all 0.2s ease;
         }
 
-        .input-group-text {
-            background-color: transparent;
-            border: none;
-            color: #999;
-            font-size: 18px;
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.1rem rgba(0,123,255,0.25);
         }
 
         .input-group {
@@ -79,29 +91,29 @@
             margin-bottom: 20px;
         }
 
-        .input-group .input-icon {
+        .input-icon {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #007bff;
+            font-size: 18px;
         }
 
         .btn-primary {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
-            border-radius: 25px;
+            border-radius: 30px;
             font-weight: 500;
             width: 100%;
             height: 45px;
             border: none;
             font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background: linear-gradient(135deg, #0056b3, #003d80);
         }
 
         .text-center a {
@@ -115,15 +127,37 @@
         }
 
         .error {
-            color: #ff4757;
-            font-size: 12px;
+            color: #e74c3c;
+            font-size: 13px;
             margin-top: 5px;
+        }
+
+        /* Toast Styles */
+        .toast-container {
+            position: fixed;
+            bottom: 0;
+            end: 0;
+            z-index: 9999;
+        }
+
+        .rounded-circle {
+            border: 2px solid #007bff;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
     <div class="card">
+        <div class="card-header">
+            <img src="resort1.jpg" alt="Logo" class="rounded-circle shadow-sm" style="width: 80px; height: 80px;">
+        </div>
         <h2>Create an Account</h2>
 
         <% String successMessage = (String) request.getAttribute("success");
@@ -168,6 +202,18 @@
         <p class="text-center mt-3">
             Already have an account? <a href="Login.jsp">Login</a>
         </p>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div id="liveToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    <!-- Error Message -->
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 
     <!-- jQuery Validation Script -->
@@ -226,7 +272,17 @@
                     error.insertAfter(element);
                 }
             });
+
+            <% String errorToast = (String) request.getAttribute("error"); %>
+            <% if (errorToast != null) { %>
+                $("#toastMessage").text("<%= errorToast %>");
+                const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                toast.show();
+            <% } %>
         });
     </script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
